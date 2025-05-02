@@ -89,16 +89,16 @@ export function LoginForm({
       className={cn("flex flex-col gap-6", className)}
       onSubmit={handleLogin}
       {...props}>
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold text-gray-800">Faça seu login!</h1>
-        <p className="text-base text-gray-600">
+      <div className="flex flex-col items-center gap-2 text-center ">
+        <h1 className="text-2xl font-bold text-black">Faça seu login!</h1>
+        <p className="text-base text-black">
           Entre com seu e-mail e senha para acessar sua conta.
         </p>
       </div>
 
       <div className="grid gap-6">
         <div className="grid gap-3">
-          <Label htmlFor="email" className="text-gray-700 text-base">
+          <Label htmlFor="email" className="text-black text-base">
             E-mail
           </Label>
           <Input
@@ -112,7 +112,7 @@ export function LoginForm({
             className={`bg-[#f9f9f9] border ${
               emailError
                 ? "border-red-500"
-                : "border-gray-300 focus:border-[#09bc8a]"
+                : "border-gray-300"
             } focus:ring-0 transition-all text-base h-11`}
             required
           />
@@ -121,12 +121,12 @@ export function LoginForm({
 
         <div className="grid gap-3">
           <div className="flex items-center">
-            <Label htmlFor="password" className="text-gray-700 text-base">
+            <Label htmlFor="password" className="text-black text-base">
               Senha
             </Label>
             <Link
               href="/password"
-              className="ml-auto text-base font-medium text-[#2b866c] hover:text-[#0c1b33] underline-offset-4 hover:underline">
+              className="ml-auto text-base font-medium text-[#000000] hover:text-[#ffffff] underline-offset-4 hover:underline">
               Esqueceu sua senha?
             </Link>
           </div>
@@ -138,7 +138,7 @@ export function LoginForm({
               placeholder="Digite sua senha"
               value={formData.senha}
               onChange={handleChange}
-              className="bg-[#f9f9f9] border border-gray-300 focus:border-[#09bc8a] focus:ring-0 transition-all text-base h-11 pr-12"
+              className="bg-[#f9f9f9] border border-gray-300 focus:ring-0 transition-all text-base h-11 pr-12"
               required
             />
             <button
@@ -156,7 +156,7 @@ export function LoginForm({
 
         <Button
           type="submit"
-          className="w-full bg-gradient-to-r from-[#09bc8a] to-[#0c1b33] text-white hover:opacity-90 text-base h-11"
+          className="w-full bg-gradient-to-r from-[#be10b6] to-[#0badcd] text-white hover:opacity-90 text-base h-11"
           disabled={isLoading}>
           {isLoading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -168,11 +168,11 @@ export function LoginForm({
         </Button>
       </div>
 
-      <div className="text-center text-base">
+      <div className="text-center text-base text-black font-medium">
         Não tem uma conta?{" "}
         <Link
           href="/register"
-          className="text-[#2b866c] hover:text-[#0c1b33] font-medium underline underline-offset-4"
+          className="text-black hover:text-[#fffdfd] font-medium underline underline-offset-4"
           scroll={false}>
           Cadastre-se
         </Link>
@@ -193,11 +193,11 @@ export default function LoginPage() {
           alt="Imagem de fundo"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-[#09bc8a]/50"></div>
+        <div className="absolute inset-0 bg-[#6561ce]/50"></div>
       </div>
 
       {/* Layout principal */}
-      <div className="grid min-h-svh lg:grid-cols-2">
+      <div className="grid min-h-svh lg:grid-cols-2 lg:bg-gradient-to-br from-[#ffffff] to-[#0d0dd5]">
         {/* Coluna do Formulário */}
         <div className="flex flex-col gap-6 p-8 md:p-10 bg-white lg:bg-transparent rounded-xl lg:rounded-none shadow-xl lg:shadow-none mx-auto my-4 lg:my-0 max-w-sm lg:max-w-none">
           <AnimatePresence mode="wait">
@@ -230,7 +230,7 @@ export default function LoginPage() {
                 alt="Imagem de fundo"
                 className="h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-[#09bc8a]/50"></div>
+              <div className="absolute inset-0 bg-[#6561ce]/50"></div>
             </motion.div>
           </AnimatePresence>
         </div>

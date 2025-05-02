@@ -289,7 +289,7 @@ export default function PessoaFisicaForm({
           type="button"
           onClick={nextPage}
           disabled={!validateCurrentPage}
-          className={`flex items-center gap-2 ml-auto bg-gradient-to-r from-[#09bc8a] to-[#0c1b33] text-white hover:opacity-90 ${
+          className={`flex items-center gap-2 ml-auto bg-gradient-to-r from-[#be10b6] to-[#0badcd] text-white hover:opacity-90 ${
             !validateCurrentPage ? "opacity-70 cursor-not-allowed" : ""
           }`}
         >
@@ -305,7 +305,7 @@ export default function PessoaFisicaForm({
         Já tem uma conta?{" "}
         <Link
           href="/login"
-          className="text-[#09bc8a] hover:underline hover:text-[#000000] underline decoration-solid"
+          className="text-[#000000] hover:underline hover:text-[#000000] decoration-solid"
           scroll={false}
         >
           Faça login

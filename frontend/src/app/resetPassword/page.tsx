@@ -74,7 +74,7 @@ export default function ResetPasswordPage() {
           alt="Imagem de fundo"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-[#09bc8a]/50"></div>
+        <div className="absolute inset-0 bg-[#038c65]/50"></div>
       </div>
 
       <div className="grid min-h-svh lg:grid-cols-2">

@@ -60,11 +60,12 @@ export function ForgotPasswordForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="bg-[#f9f9f9] border border-gray-300 focus:ring-0 transition-all text-base"
             />
           </div>
           <Button 
             type="submit" 
-            className="w-full bg-gradient-to-r from-[#09bc8a] to-[#0c1b33] text-white hover:opacity-90 text-base h-11" 
+            className="w-full bg-gradient-to-r from-[#be10b6] to-[#0badcd] text-white hover:opacity-90 h-11" 
             disabled={isLoading}
           >
             {isLoading ? "Enviando..." : "Enviar link de redefinição"}

@@ -275,13 +275,13 @@ export default function RegisterPage() {
             className="h-full w-full object-cover"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-[#09bc8a]/50"></div>
+          <div className="absolute inset-0 bg-[#6561ce]/50"></div>
         </div>
       )}
 
-      <div className={`grid min-h-screen ${shouldShowSplitLayout ? "lg:grid-cols-[1fr_1.2fr]" : ""}`}>
+      <div className={`grid lg:bg-gradient-to-bl from-[#ffffff] to-[#0d0dd5] min-h-screen ${shouldShowSplitLayout ? "lg:grid-cols-[1fr_1.2fr]" : ""}`}>
         {shouldShowSplitLayout && (
-          <div className="relative hidden lg:block order-first overflow-hidden">
+          <div className="relative hidden lg:block order-first overflow-hidden ">
             <AnimatePresence mode="wait">
               <motion.div
                 key={pathname}
@@ -300,14 +300,14 @@ export default function RegisterPage() {
                   className="h-full w-full object-cover"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-[#09bc8a]/50"></div>
+                <div className="absolute inset-0 bg-[#6561ce]/50"></div>
               </motion.div>
             </AnimatePresence>
           </div>
         )}
 
         <div
-          className={`flex flex-col gap-6 p-4 w-full max-w-[95vw] mx-auto my-4 ${
+          className={`flex flex-col gap-6 p-4 w-full max-w-[95vw] mx-auto my-4  ${
             shouldShowSplitLayout ? "lg:max-w-2xl lg:p-8" : ""
           } order-last`}
         >
