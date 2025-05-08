@@ -8,19 +8,37 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FaArrowRightToBracket } from "react-icons/fa6";
 import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
-import { toast } from "sonner"; // Importação do Sonner para exibir toasts
+import { toast } from "sonner";
 import api from "@/app/utils/axiosInstance";
+import { useTheme } from "next-themes";
+import { Toaster as Sonner } from "sonner";
+import Image from "next/image";
+
+// Interface para os dados do formulário
+interface LoginFormData {
+  email: string;
+  senha: string;
+}
+
+// Interface para a resposta de erro da API
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     senha: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -42,10 +60,11 @@ export function LoginForm({
       if (response.status === 200) {
         router.push("/");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
       toast.error("Erro ao fazer login", {
         description:
-          error.response?.data?.message || "Ocorreu um erro ao tentar fazer login.",
+          apiError.response?.data?.message || "Ocorreu um erro ao tentar fazer login.",
       });
       console.error("Erro:", error);
     } finally {
@@ -148,10 +167,6 @@ export function LoginForm({
   );
 }
 
-// Componente Toaster
-import { useTheme } from "next-themes";
-import { Toaster as Sonner } from "sonner";
-
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 export function Toaster({ ...props }: ToasterProps) {
@@ -174,7 +189,6 @@ export function Toaster({ ...props }: ToasterProps) {
   );
 }
 
-// Página de Login
 export default function LoginPage() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
@@ -189,10 +203,12 @@ export default function LoginPage() {
 
       {/* Coluna Direita (Imagem) */}
       <div className="relative hidden bg-muted lg:block">
-        <img
+        <Image
           src="/img/fundo-cadastro.jpg"
           alt="Imagem de fundo"
-          className="absolute inset-0 h-full w-full object-cover"
+          fill
+          className="object-cover"
+          priority
         />
         <div className="absolute inset-0 bg-[#09bc8a]/50"></div>
       </div>

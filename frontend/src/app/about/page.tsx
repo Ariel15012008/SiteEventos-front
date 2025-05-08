@@ -10,7 +10,6 @@ const About = () => {
       <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-1">
-          {/* Banner com imagem de fundo - Versão corrigida */}
           <div className="relative w-full h-[250px] md:h-[368px] flex justify-center items-center overflow-hidden">
             <div className="absolute inset-0 w-full h-full">
               <Image 
@@ -21,7 +20,7 @@ const About = () => {
                 priority
                 style={{ 
                   objectPosition: 'center 70%',
-                  top: '20%' // Desloca 20% para baixo // Ajusta apenas o foco da imagem
+                  top: '20%' 
                 }}
               />
             </div>
@@ -32,10 +31,8 @@ const About = () => {
             </div>
           </div>
 
-          {/* Restante do conteúdo permanece igual */}
           <div className="container mx-auto px-4 py-8 md:py-16">
             <div className="flex flex-col lg:flex-row gap-8">
-              {/* Seção de texto */}
               <div className="w-full lg:w-5/12 text-[#0C1B33] space-y-4 font-['Gill_Sans']">
                 <h1 className="text-xl font-black font-['Segoe_UI']">Quem somos</h1>
                 <p className="text-base md:text-lg">
@@ -53,7 +50,6 @@ const About = () => {
                 </p>
               </div>
 
-              {/* Grid de imagens */}
               <div className="w-full lg:w-7/12">
                 <div className="grid grid-cols-2 gap-2 sm:gap-4"
                   style={{

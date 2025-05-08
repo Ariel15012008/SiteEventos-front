@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Input } from "@/components/ui/input";
@@ -97,7 +97,6 @@ export default function ProfilePage() {
   const [showArrow, setShowArrow] = useState(false);
   const router = useRouter();
 
-  // Funções memoizadas
   const scrollToLocations = useCallback(() => {
     const element = document.getElementById("saved-locations");
     if (element) {
@@ -140,7 +139,6 @@ export default function ProfilePage() {
     [formatCEP]
   );
 
-  // Carregamento de dados otimizado
   const loadCountries = useCallback(async () => {
     try {
       const response = await authFetch(
@@ -185,7 +183,6 @@ export default function ProfilePage() {
     }
   }, []);
 
-  // Efeitos otimizados
   useEffect(() => {
     authFetch("http://localhost:8000/auth/refresh-token", {
       method: "POST",
@@ -210,7 +207,6 @@ export default function ProfilePage() {
     }
   }, [currentEndereco.id_estado, loadCities]);
 
-  // Carregamento inicial de dados
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -232,7 +228,7 @@ export default function ProfilePage() {
         });
 
         setEnderecos(enderecosData.enderecos || []);
-      } catch (error) {
+      } catch {
         toast.error("Erro ao carregar", {
           description: "Não foi possível carregar seus dados de perfil",
         });
@@ -245,7 +241,6 @@ export default function ProfilePage() {
     fetchData();
   }, [formatPhone, router]);
 
-  // Handlers otimizados
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
@@ -262,7 +257,6 @@ export default function ProfilePage() {
     []
   );
 
-  // Operações de endereço
   const saveEndereco = useCallback(
     async (enderecoData: Endereco) => {
       try {
@@ -317,7 +311,6 @@ export default function ProfilePage() {
 
         setShowArrow(!!enderecoData.complemento);
 
-        // Atualiza a lista de endereços
         const enderecosResponse = await authFetch(
           "http://localhost:8000/users/enderecos"
         );
@@ -325,10 +318,12 @@ export default function ProfilePage() {
         setEnderecos(enderecosData.enderecos || []);
 
         return result;
-      } catch (error: any) {
+      } catch (err: unknown) {
         toast.error("Falha ao salvar", {
           description:
-            error.message || "Ocorreu um erro ao tentar salvar a localização",
+            err instanceof Error
+              ? err.message
+              : "Ocorreu um erro ao tentar salvar a localização",
         });
         return null;
       } finally {
@@ -401,10 +396,12 @@ export default function ProfilePage() {
         });
 
         setFormData((prev) => ({ ...prev, senha: "" }));
-      } catch (error: any) {
+      } catch (err: unknown) {
         toast.error("Falha na atualização", {
           description:
-            error.message || "Ocorreu um erro ao tentar atualizar seu perfil",
+            err instanceof Error
+              ? err.message
+              : "Ocorreu um erro ao tentar atualizar seu perfil",
         });
       } finally {
         setIsLoading(false);
@@ -412,33 +409,6 @@ export default function ProfilePage() {
     },
     [formData]
   );
-
-  const setAsPrimaryAddress = useCallback(async (id: number) => {
-    try {
-      const response = await authFetch(
-        `http://localhost:8000/users/endereco/${id}/set-primary`,
-        {
-          method: "PUT",
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Falha ao definir endereço como primário");
-      }
-
-      const enderecosResponse = await authFetch(
-        "http://localhost:8000/users/enderecos"
-      );
-      const enderecosData = await enderecosResponse.json();
-      setEnderecos(enderecosData.enderecos || []);
-
-      toast.success("Endereço principal atualizado!");
-    } catch (error) {
-      toast.error("Erro", {
-        description: "Não foi possível definir este endereço como principal",
-      });
-    }
-  }, []);
 
   const deleteAddress = useCallback(async (id: number) => {
     try {
@@ -460,7 +430,7 @@ export default function ProfilePage() {
       setEnderecos(enderecosData.enderecos || []);
 
       toast.success("Endereço deletado com sucesso!");
-    } catch (error) {
+    } catch {
       toast.error("Erro", {
         description: "Não foi possível deletar este endereço",
       });
@@ -530,7 +500,7 @@ export default function ProfilePage() {
                 alt="Foto de perfil"
                 fill
                 className="object-cover"
-                priority // Adicionado para carregamento prioritário da imagem
+                priority
               />
             </div>
             <p className="text-lg md:text-xl font-semibold">{formData.nome}</p>

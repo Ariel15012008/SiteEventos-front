@@ -29,7 +29,6 @@ interface PessoaJuridicaFormProps {
   }
   deviceType: DeviceType
   currentPage: number
-  totalPages: number
   showPassword: boolean
   isLoading: boolean
   termsAccepted: boolean
@@ -52,7 +51,6 @@ export default function PessoaJuridicaForm({
   errors,
   deviceType,
   currentPage,
-  totalPages,
   showPassword,
   isLoading,
   termsAccepted,

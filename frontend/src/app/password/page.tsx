@@ -1,26 +1,32 @@
-
 "use client";
 
 import { ForgotPasswordForm } from "@/components/forgotPasswordForm";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ForgotPasswordPage() {
   const pathname = usePathname();
 
   return (
     <>
-      <div className="fixed inset-0 -z-10 lg:hidden ">
-        <img
+      {/* Fundo para mobile */}
+      <div className="fixed inset-0 -z-10 lg:hidden">
+        <Image
           src="/img/fundo-cadastro.jpg"
           alt="Imagem de fundo"
-          className="h-full w-full object-cover "
+          fill
+          className="object-cover"
+          quality={80}
+          priority
         />
-        <div className="absolute inset-0 "></div>
+        <div className="absolute inset-0"></div>
       </div>
 
+      {/* Layout principal */}
       <div className="grid min-h-svh lg:grid-cols-2 lg:bg-gradient-to-br from-[#ffffff] to-[#0d0dd5]">
+        {/* Coluna do Formulário */}
         <div className="flex flex-col gap-6 p-8 md:p-10 bg-white lg:bg-transparent rounded-xl lg:rounded-none shadow-xl lg:shadow-none mx-auto my-4 lg:my-0 max-w-sm lg:max-w-none">
           <AnimatePresence mode="wait">
             <motion.div
@@ -42,7 +48,7 @@ export default function ForgotPasswordPage() {
                 <div className="mt-4 text-center text-base">
                   <Link 
                     href="/login" 
-                    className="text-[#000000] hover:text-[#ffffff] hover:underline  font-medium "
+                    className="text-[#000000] hover:text-[#ffffff] hover:underline font-medium"
                   >
                     Voltar para o login
                   </Link>
@@ -52,7 +58,7 @@ export default function ForgotPasswordPage() {
           </AnimatePresence>
         </div>
 
-        {/* Coluna da Imagem (igual ao login) */}
+        {/* Coluna da Imagem (desktop) */}
         <div className="relative hidden lg:block overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div
@@ -63,10 +69,13 @@ export default function ForgotPasswordPage() {
               transition={{ duration: 0.7, ease: "easeInOut" }}
               className="absolute inset-0"
             >
-              <img
+              <Image
                 src="/img/fundo-cadastro.jpg"
                 alt="Imagem de fundo"
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
+                quality={80}
+                priority
               />
               <div className="absolute inset-0 lg:bg-[#6561ce]/50"></div>
             </motion.div>

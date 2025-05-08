@@ -4,9 +4,10 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FaArrowRightToBracket } from "react-icons/fa6";
+import Image from "next/image";
 
 export function Footer() {
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading] = React.useState(false); // Removido setIsLoading não utilizado
 
   return (
     <footer className="w-full bg-white text-gray-800 py-10 px-4 shadow-inner">
@@ -40,7 +41,13 @@ export function Footer() {
 
           {/* COLUNA 2 - LOGO + ÍCONES */}
           <div className="w-full md:w-1/3 flex flex-col items-center">
-            <img src="/img/logo.png" alt="Logo" className="w-32 mb-4" />
+            <Image 
+              src="/img/logo.png" 
+              alt="Logo" 
+              width={128} 
+              height={128}
+              className="w-32 mb-4" 
+            />
             <div className="flex gap-3">
               <a
                 href="https://wa.me/"
@@ -48,8 +55,10 @@ export function Footer() {
                 aria-label="WhatsApp"
                 rel="noreferrer">
                 <div className="bg-[#0C1B33] rounded-full">
-                  <img
+                  <Image
                     src="/img/whatsapp-footer.png"
+                    width={28}
+                    height={28}
                     className="h-7 w-7"
                     alt="WhatsApp"
                   />
@@ -61,8 +70,10 @@ export function Footer() {
                 aria-label="Instagram"
                 rel="noreferrer">
                 <div className="bg-[#0C1B33] rounded-full">
-                  <img
+                  <Image
                     src="/img/instagram-footer.png"
+                    width={28}
+                    height={28}
                     className="h-7 w-7"
                     alt="Instagram"
                   />
@@ -74,8 +85,10 @@ export function Footer() {
                 aria-label="Facebook"
                 rel="noreferrer">
                 <div className="bg-[#0C1B33] rounded-full">
-                  <img
+                  <Image
                     src="/img/facebook-footer.png"
+                    width={28}
+                    height={28}
                     className="h-7 w-7"
                     alt="Facebook"
                   />
@@ -117,7 +130,13 @@ export function Footer() {
         <div className="flex flex-col gap-10 md:hidden">
           {/* LOGO */}
           <div className="flex justify-center">
-            <img src="/img/logo.png" alt="Logo" className="w-32 mb-4" />
+            <Image 
+              src="/img/logo.png" 
+              alt="Logo" 
+              width={128} 
+              height={128}
+              className="w-32 mb-4" 
+            />
           </div>
 
           {/* LINKS EM DUAS COLUNAS */}
@@ -152,8 +171,10 @@ export function Footer() {
               aria-label="WhatsApp"
               rel="noreferrer">
               <div className="bg-[#0C1B33] rounded-full">
-                <img
+                <Image
                   src="/img/whatsapp-footer.png"
+                  width={28}
+                  height={28}
                   className="h-7 w-7"
                   alt="WhatsApp"
                 />
@@ -165,8 +186,10 @@ export function Footer() {
               aria-label="Instagram"
               rel="noreferrer">
               <div className="bg-[#0C1B33] rounded-full">
-                <img
+                <Image
                   src="/img/instagram-footer.png"
+                  width={28}
+                  height={28}
                   className="h-7 w-7"
                   alt="Instagram"
                 />
@@ -178,8 +201,10 @@ export function Footer() {
               aria-label="Facebook"
               rel="noreferrer">
               <div className="bg-[#0C1B33] rounded-full">
-                <img
+                <Image
                   src="/img/facebook-footer.png"
+                  width={28}
+                  height={28}
                   className="h-7 w-7"
                   alt="Facebook"
                 />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import api from "@/app/utils/axiosInstance";
 import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
@@ -10,8 +10,18 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
-export default function ResetPasswordPage() {
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+}
+
+function ResetPasswordContent() {
   const [formData, setFormData] = useState({
     newPassword: "",
     confirmPassword: "",
@@ -56,11 +66,12 @@ export default function ResetPasswordPage() {
         toast.success("Senha alterada com sucesso!");
         router.push("/login");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
       toast.error(
-        error.response?.data?.message || "Erro ao alterar a senha."
+        apiError.response?.data?.message || "Erro ao alterar a senha."
       );
-      console.log(error);
+      console.log(apiError);
     } finally {
       setIsLoading(false);
     }
@@ -69,10 +80,13 @@ export default function ResetPasswordPage() {
   return (
     <>
       <div className="fixed inset-0 -z-10 lg:hidden">
-        <img
+        <Image
           src="/img/fundo-cadastro.jpg"
           alt="Imagem de fundo"
-          className="h-full w-full object-cover"
+          fill
+          className="object-cover"
+          quality={80}
+          priority
         />
         <div className="absolute inset-0 bg-[#038c65]/50"></div>
       </div>
@@ -89,10 +103,13 @@ export default function ResetPasswordPage() {
               transition={{ duration: 0.7, ease: "easeInOut" }}
               className="absolute inset-0"
             >
-              <img
+              <Image
                 src="/img/fundo-cadastro.jpg"
                 alt="Imagem de fundo"
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
+                quality={80}
+                priority
               />
               <div className="absolute inset-0 bg-[#09bc8a]/50"></div>
             </motion.div>
@@ -202,5 +219,17 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <ResetPasswordContent />
+    </Suspense>
   );
 }

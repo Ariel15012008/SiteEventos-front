@@ -28,7 +28,6 @@ interface PessoaFisicaFormProps {
   }
   deviceType: DeviceType
   currentPage: number
-  totalPages: number
   showPassword: boolean
   isLoading: boolean
   termsAccepted: boolean
@@ -47,7 +46,6 @@ export default function PessoaFisicaForm({
   errors,
   deviceType,
   currentPage,
-  totalPages,
   showPassword,
   isLoading,
   termsAccepted,

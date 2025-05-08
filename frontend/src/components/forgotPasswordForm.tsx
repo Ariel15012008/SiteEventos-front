@@ -9,11 +9,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FiMail, FiClock } from "react-icons/fi";
 
+interface ApiErrorResponse {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 export function ForgotPasswordForm() {
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
-  const [countdown, setCountdown] = useState(10);
+  const [email, setEmail] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [emailSent, setEmailSent] = useState<boolean>(false);
+  const [countdown, setCountdown] = useState<number>(10);
   const router = useRouter();
 
   useEffect(() => {
@@ -38,9 +46,10 @@ export function ForgotPasswordForm() {
         toast.success("E-mail enviado com sucesso!");
         setEmailSent(true);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = (error as ApiErrorResponse)?.response?.data?.message || "Tente novamente mais tarde.";
       toast.error("Erro ao enviar e-mail", {
-        description: error.response?.data?.message || "Tente novamente mais tarde.",
+        description: errorMessage,
       });
     } finally {
       setIsLoading(false);
@@ -58,7 +67,7 @@ export function ForgotPasswordForm() {
               type="email"
               placeholder="seu@email.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               required
               className="bg-[#f9f9f9] border border-gray-300 focus:ring-0 transition-all text-base"
             />

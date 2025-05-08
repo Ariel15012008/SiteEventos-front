@@ -12,11 +12,22 @@ import { toast, Toaster } from "sonner";
 import api from "@/app/utils/axiosInstance";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"form">) {
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+}
+
+interface LoginFormProps extends React.ComponentPropsWithoutRef<"form"> {
+  className?: string;
+}
+
+function LoginForm({ className, ...props }: LoginFormProps) {
   const [formData, setFormData] = useState({
     email: "",
     senha: "",
@@ -27,33 +38,31 @@ export function LoginForm({
 
   const router = useRouter();
 
-  const validateEmail = (email: string) => {
+  function validateEmail(email: string) {
     if (!email) return "O e-mail é obrigatório";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       return "Por favor, insira um e-mail válido";
     return "";
-  };
+  }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Validar e-mail em tempo real
     if (name === "email") {
       setEmailError(validateEmail(value));
     }
-  };
+  }
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
     if (e.target.name === "email") {
       setEmailError(validateEmail(e.target.value));
     }
-  };
+  }
 
-  const handleLogin = async (e: React.FormEvent) => {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
 
-    // Validar campos antes de enviar
     const emailValidation = validateEmail(formData.email);
     setEmailError(emailValidation);
 
@@ -73,22 +82,24 @@ export function LoginForm({
       if (response.status === 200) {
         router.push("/home");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
       toast.error("Erro ao fazer login", {
         description:
-          error.response?.data?.message ||
+          apiError.response?.data?.message ||
           "Ocorreu um erro ao tentar fazer login.",
       });
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   return (
     <form
       className={cn("flex flex-col gap-6", className)}
       onSubmit={handleLogin}
-      {...props}>
+      {...props}
+    >
       <div className="flex flex-col items-center gap-2 text-center ">
         <h1 className="text-2xl font-bold text-black">Faça seu login!</h1>
         <p className="text-base text-black">
@@ -126,7 +137,8 @@ export function LoginForm({
             </Label>
             <Link
               href="/password"
-              className="ml-auto text-base font-medium text-[#000000] hover:text-[#ffffff] underline-offset-4 hover:underline">
+              className="ml-auto text-base font-medium text-[#000000] hover:text-[#ffffff] underline-offset-4 hover:underline"
+            >
               Esqueceu sua senha?
             </Link>
           </div>
@@ -144,7 +156,8 @@ export function LoginForm({
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            >
               {showPassword ? (
                 <IoEyeOffSharp size={20} />
               ) : (
@@ -157,7 +170,8 @@ export function LoginForm({
         <Button
           type="submit"
           className="w-full bg-gradient-to-r from-[#be10b6] to-[#0badcd] text-white hover:opacity-90 text-base h-11"
-          disabled={isLoading}>
+          disabled={isLoading}
+        >
           {isLoading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           ) : (
@@ -173,7 +187,8 @@ export function LoginForm({
         <Link
           href="/register"
           className="text-black hover:text-[#fffdfd] font-medium underline underline-offset-4"
-          scroll={false}>
+          scroll={false}
+        >
           Cadastre-se
         </Link>
       </div>
@@ -188,10 +203,13 @@ export default function LoginPage() {
     <>
       {/* Fundo para mobile (igual ao cadastro) */}
       <div className="fixed inset-0 -z-10 lg:hidden">
-        <img
+        <Image
           src="/img/fundo-cadastro.jpg"
           alt="Imagem de fundo"
-          className="h-full w-full object-cover"
+          fill
+          className="object-cover"
+          quality={80}
+          priority
         />
         <div className="absolute inset-0 bg-[#6561ce]/50"></div>
       </div>
@@ -207,7 +225,8 @@ export default function LoginPage() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "-100%", opacity: 0 }}
               transition={{ duration: 0.7, ease: "easeInOut" }}
-              className="flex flex-1 items-center justify-center">
+              className="flex flex-1 items-center justify-center"
+            >
               <div className="w-full max-w-sm">
                 <LoginForm />
               </div>
@@ -224,11 +243,15 @@ export default function LoginPage() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0 }}
               transition={{ duration: 0.7, ease: "easeInOut" }}
-              className="absolute inset-0">
-              <img
+              className="absolute inset-0"
+            >
+              <Image
                 src="/img/fundo-cadastro.jpg"
                 alt="Imagem de fundo"
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
+                quality={80}
+                priority
               />
               <div className="absolute inset-0 bg-[#6561ce]/50"></div>
             </motion.div>

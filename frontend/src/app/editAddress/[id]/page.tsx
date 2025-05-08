@@ -53,10 +53,10 @@ const formatarNome = (nome: string) => {
 const cidadeCache = new Map<string, Cidade[]>();
 
 export default function EditEnderecoPage() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   
   const [endereco, setEndereco] = useState<Endereco>({
@@ -73,7 +73,7 @@ export default function EditEnderecoPage() {
 
   const [estados, setEstados] = useState<Estado[]>([]);
   const [cidades, setCidades] = useState<Cidade[]>([]);
-  const [cidadesCarregadas, setCidadesCarregadas] = useState(false);
+  const [cidadesCarregadas, setCidadesCarregadas] = useState<boolean>(false);
 
   useEffect(() => {
     const loadEstados = async () => {
@@ -82,7 +82,7 @@ export default function EditEnderecoPage() {
         if (!response.ok) {
           throw new Error(`Erro ao carregar estados: ${response.status}`);
         }
-        const data = await response.json();
+        const data: Estado[] = await response.json();
         const estadosFormatados = data.map((estado: Estado) => ({
           sigla: estado.sigla,
           nome: formatarNome(estado.nome)
@@ -106,7 +106,6 @@ export default function EditEnderecoPage() {
       return;
     }
 
-    // Encontra a sigla correspondente ao nome do estado
     const estadoEncontrado = estados.find(e => 
       e.nome === estadoNome
     );
@@ -137,7 +136,7 @@ export default function EditEnderecoPage() {
         throw new Error(`Erro ao carregar cidades: ${response.status}`);
       }
 
-      const data = await response.json();
+      const data: { nome: string }[] = await response.json();
       const cidadesFormatadas = Array.isArray(data) 
         ? data.map(cidade => ({ nome: formatarNome(cidade.nome) }))
         : [];
@@ -178,16 +177,15 @@ export default function EditEnderecoPage() {
         throw new Error(`Erro HTTP ${response.status}: ${errorText}`);
       }
 
-      const data = await response.json();
+      const data: Endereco = await response.json();
       
       if (!data.id) {
         throw new Error("Dados do endereço inválidos ou vazios");
       }
 
-      // Converte sigla para nome do estado se necessário
       const nomeEstado = estados.find(e => e.sigla === data.nome_estado)?.nome || data.nome_estado;
 
-      const novoEndereco = {
+      const novoEndereco: Endereco = {
         id: data.id,
         cep: data.cep || "",
         logradouro: data.logradouro || "",
@@ -206,11 +204,12 @@ export default function EditEnderecoPage() {
       }
       
       setError(null);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("[ERROR] Erro ao carregar endereço:", error);
-      setError(error.message || "Erro ao carregar dados do endereço");
+      const errorMessage = error instanceof Error ? error.message : "Erro ao carregar dados do endereço";
+      setError(errorMessage);
       toast.error("Falha ao carregar endereço", {
-        description: error.message || "Verifique sua conexão e tente novamente",
+        description: errorMessage || "Verifique sua conexão e tente novamente",
       });
     } finally {
       setIsLoading(false);
@@ -269,7 +268,6 @@ export default function EditEnderecoPage() {
         throw new Error("CEP deve conter 8 dígitos");
       }
 
-      // Envia o nome do estado diretamente (já formatado)
       const response = await authFetch(
         `http://localhost:8000/endereco/update`,
         {
@@ -285,23 +283,24 @@ export default function EditEnderecoPage() {
             complemento: endereco.complemento,
             bairro: endereco.bairro,
             nome_cidade: endereco.nome_cidade,
-            nome_estado: endereco.nome_estado, // Já está como nome completo
+            nome_estado: endereco.nome_estado,
             endereco_primario: endereco.endereco_primario,
           }),
         }
       );
       
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData: { message?: string } = await response.json();
         throw new Error(errorData.message || `Erro HTTP ${response.status}`);
       }
 
       toast.success("Endereço atualizado com sucesso!");
       router.push("/user");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("[ERROR] Erro ao atualizar endereço:", error);
+      const errorMessage = error instanceof Error ? error.message : "Tente novamente mais tarde";
       toast.error("Falha ao atualizar endereço", {
-        description: error.message || "Tente novamente mais tarde",
+        description: errorMessage,
       });
     } finally {
       setIsSaving(false);

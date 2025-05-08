@@ -1,15 +1,24 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect, useMemo, useCallback } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { toast, Toaster } from "sonner"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 import api from "@/app/utils/axiosInstance"
 import PessoaFisicaForm from "@/components/pessoaFisicaForm"
 
 type DeviceType = "mobile" | "tablet" | "laptop" | "desktop"
+
+interface ApiError {
+  response?: {
+    data?: {
+      detail?: string
+      message?: string
+    }
+  }
+  message?: string
+}
 
 const useDeviceType = (): DeviceType => {
   const [deviceType, setDeviceType] = useState<DeviceType>("desktop")
@@ -40,7 +49,6 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [termsAccepted, setTermsAccepted] = useState(false)
 
-  // Mantendo a estrutura original completa do formData
   const [formData, setFormData] = useState({
     nome_completo: "",
     email: "",
@@ -59,7 +67,6 @@ export default function RegisterPage() {
     regime: "",
   })
 
-  // Validações
   const validarNome = (nome: string) => {
     if (nome.trim() === "") return "O nome é obrigatório"
     if (/\d/.test(nome)) return "O nome não pode conter números"
@@ -78,8 +85,6 @@ export default function RegisterPage() {
     if (/[a-zA-Z]/.test(telefone)) return "O telefone não pode conter letras"
     return ""
   }
-
-  const totalPages = 2
 
   const validateCurrentPage = useMemo(() => {
     if (currentPage === 1) {
@@ -125,12 +130,11 @@ export default function RegisterPage() {
         return
       }
 
-      // Validar todos os campos antes de enviar
       const novosErros = {
         nome_completo: validarNome(formData.nome_completo),
         email: validarEmail(formData.email),
         telefone_celular: validarTelefone(formData.telefone_celular),
-        regime: "", // Mantendo a estrutura original
+        regime: "",
       }
 
       setErrors(novosErros)
@@ -175,18 +179,20 @@ export default function RegisterPage() {
             senha: "",
           })
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Erro na requisição:", error)
+        const apiError = error as ApiError
+        
         if (
-          error.response?.data?.detail?.includes("Email já cadastrado") ||
-          error.response?.data?.message?.includes("Email já cadastrado")
+          apiError.response?.data?.detail?.includes("Email já cadastrado") ||
+          apiError.response?.data?.message?.includes("Email já cadastrado")
         ) {
-          // Mensagem genérica para email já cadastrado
           toast.error("Erro ao cadastrar")
         } else {
-          // Mostra outras mensagens de erro normalmente
           const errorMessage =
-            error.response?.data?.detail || error.response?.data?.message || "Ocorreu um erro ao tentar se cadastrar."
+            apiError.response?.data?.detail || 
+            apiError.response?.data?.message || 
+            "Ocorreu um erro ao tentar se cadastrar."
           toast.error("Erro ao cadastrar", {
             description: errorMessage,
           })
@@ -211,7 +217,6 @@ export default function RegisterPage() {
 
       setFormData((prev) => ({ ...prev, [name]: formattedValue }))
 
-      // Limpar erro quando o usuário começa a digitar
       if (errors[name as keyof typeof errors]) {
         setErrors((prev) => ({ ...prev, [name]: "" }))
       }
@@ -245,8 +250,8 @@ export default function RegisterPage() {
       toast.error("Preencha todos os campos obrigatórios corretamente")
       return
     }
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-  }, [validateCurrentPage, totalPages])
+    setCurrentPage((prev) => Math.min(prev + 1, 2)) // Removido totalPages e usado valor fixo 2
+  }, [validateCurrentPage])
 
   const prevPage = useCallback(() => {
     setCurrentPage((prev) => Math.max(prev - 1, 1))
@@ -269,11 +274,13 @@ export default function RegisterPage() {
     <>
       {(deviceType === "mobile" || deviceType === "tablet") && (
         <div className="fixed inset-0 -z-10">
-          <img
+          <Image
             src="/img/fundo-cadastro.jpg"
             alt="Imagem de fundo"
-            className="h-full w-full object-cover"
-            loading="lazy"
+            fill
+            className="object-cover"
+            quality={80}
+            priority
           />
           <div className="absolute inset-0 bg-[#6561ce]/50"></div>
         </div>
@@ -281,7 +288,7 @@ export default function RegisterPage() {
 
       <div className={`grid lg:bg-gradient-to-bl from-[#ffffff] to-[#0d0dd5] min-h-screen ${shouldShowSplitLayout ? "lg:grid-cols-[1fr_1.2fr]" : ""}`}>
         {shouldShowSplitLayout && (
-          <div className="relative hidden lg:block order-first overflow-hidden ">
+          <div className="relative hidden lg:block order-first overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={pathname}
@@ -294,11 +301,13 @@ export default function RegisterPage() {
                 transition={{ duration: animationDuration, ease: "easeInOut" }}
                 className="absolute inset-0"
               >
-                <img
+                <Image
                   src="/img/fundo-cadastro.jpg"
                   alt="Imagem de fundo"
-                  className="h-full w-full object-cover"
-                  loading="lazy"
+                  fill
+                  className="object-cover"
+                  quality={80}
+                  priority
                 />
                 <div className="absolute inset-0 bg-[#6561ce]/50"></div>
               </motion.div>
@@ -307,7 +316,7 @@ export default function RegisterPage() {
         )}
 
         <div
-          className={`flex flex-col gap-6 p-4 w-full max-w-[95vw] mx-auto my-4  ${
+          className={`flex flex-col gap-6 p-4 w-full max-w-[95vw] mx-auto my-4 ${
             shouldShowSplitLayout ? "lg:max-w-2xl lg:p-8" : ""
           } order-last`}
         >
@@ -351,7 +360,6 @@ export default function RegisterPage() {
                     errors={errors}
                     deviceType={deviceType}
                     currentPage={currentPage}
-                    totalPages={totalPages}
                     showPassword={showPassword}
                     isLoading={isLoading}
                     termsAccepted={termsAccepted}

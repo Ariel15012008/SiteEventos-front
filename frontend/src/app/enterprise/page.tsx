@@ -6,7 +6,6 @@ import { Footer } from "@/components/footer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
 import { FaArrowDown } from "react-icons/fa";
 import { FaRegEdit, FaTrash } from "react-icons/fa";
 import Image from "next/image";
@@ -65,14 +64,12 @@ interface SavedEndereco {
   endereco_primario: boolean;
 }
 
-export default function ProfilePage() {
-  const [formData, setFormData] = useState({
-    nome: "",
-    email: "",
-    telefone: "",
-    senha: "",
-  });
+interface ApiError {
+  detail?: string;
+  message?: string;
+}
 
+export default function ProfilePage() {
   const [enderecos, setEnderecos] = useState<SavedEndereco[]>([]);
   const [currentEndereco, setCurrentEndereco] = useState<Endereco>({
     id_pais: "",
@@ -89,12 +86,9 @@ export default function ProfilePage() {
   const [countries, setCountries] = useState<País[]>([]);
   const [states, setStates] = useState<Estado[]>([]);
   const [cities, setCities] = useState<Cidade[]>([]);
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isFetching, setIsFetching] = useState(true);
-  const [showLocationForm, setShowLocationForm] = useState(false);
-  const [isSavingLocation, setIsSavingLocation] = useState(false);
-  const [showArrow, setShowArrow] = useState(false);
+  const [isFetching, setIsFetching] = useState<boolean>(true);
+  const [isSavingLocation, setIsSavingLocation] = useState<boolean>(false);
+  const [showArrow, setShowArrow] = useState<boolean>(false);
   const router = useRouter();
 
   const scrollToLocations = () => {
@@ -102,14 +96,6 @@ export default function ProfilePage() {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
-  };
-
-  const formatPhone = (value: string): string => {
-    const numbers = value.replace(/\D/g, "");
-    if (numbers.length === 11) {
-      return numbers.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-    }
-    return value;
   };
 
   const formatCEP = (value: string): string => {
@@ -149,7 +135,7 @@ export default function ProfilePage() {
   useEffect(() => {
     authFetch("http://localhost:8000/localidades/paises")
       .then((response) => response.json())
-      .then((data) => setCountries(data))
+      .then((data: País[]) => setCountries(data))
       .catch(() =>
         toast.error("Erro ao carregar", {
           description: "Não foi possível carregar a lista de países",
@@ -163,7 +149,7 @@ export default function ProfilePage() {
         `http://localhost:8000/localidades/estados?pais_id=${currentEndereco.id_pais}`
       )
         .then((response) => response.json())
-        .then((data) => setStates(data))
+        .then((data: Estado[]) => setStates(data))
         .catch(() =>
           toast.error("Erro ao carregar", {
             description: "Não foi possível carregar a lista de estados",
@@ -178,7 +164,7 @@ export default function ProfilePage() {
         `http://localhost:8000/localidades/cidades?estado_id=${currentEndereco.id_estado}`
       )
         .then((response) => response.json())
-        .then((data) => setCities(data))
+        .then((data: Cidade[]) => setCities(data))
         .catch(() =>
           toast.error("Erro ao carregar", {
             description: "Não foi possível carregar a lista de cidades",
@@ -191,21 +177,16 @@ export default function ProfilePage() {
     const fetchData = async () => {
       try {
         const userResponse = await authFetch("http://localhost:8000/users/me");
-        const userData = await userResponse.json();
-
-        setFormData({
-          nome: userData.nome || "",
-          email: userData.email || "",
-          telefone: userData.telefone ? formatPhone(userData.telefone) : "",
-          senha: "",
-        });
+        if (!userResponse.ok) {
+          throw new Error("Erro ao carregar dados do usuário");
+        }
 
         const enderecosResponse = await authFetch(
           "http://localhost:8000/users/enderecos"
         );
-        const enderecosData = await enderecosResponse.json();
+        const enderecosData: { enderecos: SavedEndereco[] } = await enderecosResponse.json();
         setEnderecos(enderecosData.enderecos || []);
-      } catch (error) {
+      } catch {
         toast.error("Erro ao carregar", {
           description: "Não foi possível carregar seus dados de perfil",
         });
@@ -217,12 +198,6 @@ export default function ProfilePage() {
 
     fetchData();
   }, [router]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const formatted = name === "telefone" ? formatPhone(value) : value;
-    setFormData((prev) => ({ ...prev, [name]: formatted }));
-  };
 
   const handleEnderecoChange = (
     key: keyof Endereco,
@@ -272,7 +247,7 @@ export default function ProfilePage() {
       );
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData: ApiError = await response.json();
         throw new Error(errorData.detail || "Erro ao salvar localização");
       }
 
@@ -284,18 +259,17 @@ export default function ProfilePage() {
 
       setShowArrow(!!enderecoData.complemento);
 
-      // Atualiza a lista de endereços após cadastrar um novo
       const enderecosResponse = await authFetch(
         "http://localhost:8000/users/enderecos"
       );
-      const enderecosData = await enderecosResponse.json();
+      const enderecosData: { enderecos: SavedEndereco[] } = await enderecosResponse.json();
       setEnderecos(enderecosData.enderecos || []);
 
       return result;
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as Error;
       toast.error("Falha ao salvar", {
-        description:
-          error.message || "Ocorreu um erro ao tentar salvar a localização",
+        description: err.message || "Ocorreu um erro ao tentar salvar a localização",
       });
       return null;
     } finally {
@@ -332,77 +306,6 @@ export default function ProfilePage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const response = await authFetch("http://localhost:8000/users/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          pessoa: {
-            nome_completo: formData.nome,
-            email: formData.email,
-            telefone_celular: formData.telefone.replace(/\D/g, ""),
-          },
-          usuario: {
-            email: formData.email,
-            senha: formData.senha || undefined,
-          },
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Erro ao atualizar perfil");
-      }
-
-      toast.success("Perfil atualizado!", {
-        description: "Seus dados foram salvos com sucesso",
-      });
-
-      setFormData((prev) => ({ ...prev, senha: "" }));
-    } catch (error: any) {
-      toast.error("Falha na atualização", {
-        description:
-          error.message || "Ocorreu um erro ao tentar atualizar seu perfil",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const setAsPrimaryAddress = async (id: number) => {
-    try {
-      const response = await authFetch(
-        `http://localhost:8000/users/endereco/${id}/set-primary`,
-        {
-          method: "PUT",
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Falha ao definir endereço como primário");
-      }
-
-      // Atualiza a lista de endereços após a mudança
-      const enderecosResponse = await authFetch(
-        "http://localhost:8000/users/enderecos"
-      );
-      const enderecosData = await enderecosResponse.json();
-      setEnderecos(enderecosData.enderecos || []);
-
-      toast.success("Endereço principal atualizado!");
-    } catch (error) {
-      toast.error("Erro", {
-        description: "Não foi possível definir este endereço como principal",
-      });
-    }
-  };
-
   const deleteAddress = async (id: number) => {
     try {
       const response = await authFetch(
@@ -416,15 +319,14 @@ export default function ProfilePage() {
         throw new Error("Falha ao deletar endereço");
       }
 
-      // Atualiza a lista de endereços após a exclusão
       const enderecosResponse = await authFetch(
         "http://localhost:8000/users/enderecos"
       );
-      const enderecosData = await enderecosResponse.json();
+      const enderecosData: { enderecos: SavedEndereco[] } = await enderecosResponse.json();
       setEnderecos(enderecosData.enderecos || []);
 
       toast.success("Endereço deletado com sucesso!");
-    } catch (error) {
+    } catch {
       toast.error("Erro", {
         description: "Não foi possível deletar este endereço",
       });
@@ -495,13 +397,6 @@ export default function ProfilePage() {
                 className="object-cover"
               />
             </div>
-            <p className="text-lg md:text-xl font-semibold">{formData.nome}</p>
-            <Button
-              variant="outline"
-              className="text-sm md:text-base cursor-pointer"
-            >
-              Trocar foto
-            </Button>
           </div>
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
