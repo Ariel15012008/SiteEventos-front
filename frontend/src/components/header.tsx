@@ -22,40 +22,45 @@ export function Header() {
   const router = useRouter();
 
   useEffect(() => {
-    
-    fetch("http://localhost:8000/users/me", {
-      method: "GET",
-      credentials: "include",
-    })
-      .then(async (res) => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/users/me", {
+          method: "GET",
+          credentials: "include",
+        });
         
         if (!res.ok) {
-          console.error("Falha na autenticação");
           throw new Error("Não autenticado");
         }
         
         const data = await res.json();
-        
         setUser({ name: data.nome, email: data.email });
         setIsAuthenticated(true);
         
-      })
-      .catch((error) => {
-        console.error("Erro na autenticação:");
+      } catch (error) {
+        console.error("Erro na verificação de autenticação:", error);
         setUser(null);
         setIsAuthenticated(false);
-      });
+      }
+    };
+
+    checkAuth();
   }, []);
 
   const logout = async () => {
-    await fetch("http://localhost:8000/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-
-    setIsAuthenticated(false);
-    setUser(null);
-    router.push("/login");
+    try {
+      await fetch("http://localhost:8000/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      
+      setIsAuthenticated(false);
+      setUser(null);
+      router.push("/login");
+      
+    } catch (error) {
+      console.error("Erro durante logout:", error);
+    }
   };
 
   return (
@@ -91,7 +96,7 @@ export function Header() {
                 <span className="font-medium">{user?.name || "Usuário"}</span>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-[#ffffff] shadow-xl rounded-md border-0 p-1 min-w-[200px]">
+            <DropdownMenuContent align="end" className="bg-white shadow-xl rounded-md border-0 p-1 min-w-[200px]">
               <DropdownMenuItem>
                 <Link href="/user" className="flex items-center w-full">
                   <IoPersonCircle className="mr-2" />
