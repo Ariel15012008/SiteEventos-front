@@ -2,249 +2,106 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { FaArrowRightToBracket } from "react-icons/fa6";
 import Image from "next/image";
+import Link from "next/link";
+import whatsappIcon from "../../public/img/whatsapp-footer.png";
+import instagramIcon from "../../public/img/instagram-footer.png";
+import facebookIcon from "../../public/img/facebook-footer.png";
 
 export function Footer() {
-  const [isLoading] = React.useState(false); // Removido setIsLoading não utilizado
-
   return (
-    <footer className="w-full bg-white text-gray-800 py-10 px-4 shadow-inner">
-      {/* LAYOUT RESPONSIVO COMPLETO */}
-      <div className="max-w-7xl mx-auto">
-        {/* TELAS GRANDES E MÉDIAS */}
-        <div className="hidden md:flex flex-col md:flex-row md:justify-between md:items-start gap-10">
-          {/* COLUNA 1 - LINKS */}
-          <div className="w-full md:w-1/3 flex justify-center md:justify-start">
-            <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm text-center md:text-left">
-              <a href="#" className="hover:text-[#09BC8A]">
-                Política de troca
-              </a>
-              <a href="#" className="hover:text-[#09BC8A]">
-                Crie sua conta
-              </a>
-              <a href="#" className="hover:text-[#09BC8A]">
-                Perguntas frequentes
-              </a>
-              <a href="#" className="hover:text-[#09BC8A]">
-                Trabalhe conosco
-              </a>
-              <a href="#" className="hover:text-[#09BC8A]">
-                Política de privacidade
-              </a>
-              <a href="#" className="hover:text-[#09BC8A]">
-                Anuncie na Bikes.com.br
-              </a>
-            </div>
-          </div>
-
-          {/* COLUNA 2 - LOGO + ÍCONES */}
-          <div className="w-full md:w-1/3 flex flex-col items-center">
-            <Image 
-              src="/img/logo.png" 
-              alt="Logo" 
-              width={128} 
-              height={128}
-              className="w-32 mb-4" 
-            />
-            <div className="flex gap-3">
-              <a
-                href="https://wa.me/"
-                target="_blank"
-                aria-label="WhatsApp"
-                rel="noreferrer">
-                <div className="bg-[#0C1B33] rounded-full">
-                  <Image
-                    src="/img/whatsapp-footer.png"
-                    width={28}
-                    height={28}
-                    className="h-7 w-7"
-                    alt="WhatsApp"
-                  />
-                </div>
-              </a>
-              <a
-                href="https://instagram.com/"
-                target="_blank"
-                aria-label="Instagram"
-                rel="noreferrer">
-                <div className="bg-[#0C1B33] rounded-full">
-                  <Image
-                    src="/img/instagram-footer.png"
-                    width={28}
-                    height={28}
-                    className="h-7 w-7"
-                    alt="Instagram"
-                  />
-                </div>
-              </a>
-              <a
-                href="https://facebook.com/"
-                target="_blank"
-                aria-label="Facebook"
-                rel="noreferrer">
-                <div className="bg-[#0C1B33] rounded-full">
-                  <Image
-                    src="/img/facebook-footer.png"
-                    width={28}
-                    height={28}
-                    className="h-7 w-7"
-                    alt="Facebook"
-                  />
-                </div>
-              </a>
-            </div>
-          </div>
-
-          {/* COLUNA 3 - NEWSLETTER */}
-          <div className="w-full md:w-1/3 text-center md:text-right">
-            <label htmlFor="email" className="block text-sm font-medium mb-2">
-              Assine nossa Newsletter
-            </label>
-            <div className="flex flex-col items-center md:items-end gap-3">
-              <Input
-                type="email"
-                id="email"
-                placeholder="E-mail"
-                className="w-64 border-2 border-[#09BC8A] rounded-md px-3 py-2 text-sm"
-                required
+    <footer className="bg-gray-900 text-white py-8 sm:py-12 px-6 sm:px-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+        <div>
+          <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
+            UniEvents
+          </h3>
+          <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+            Conectando você aos melhores eventos acadêmicos desde 2023.
+          </p>
+          <div className="flex gap-4 sm:gap-5 mt-4 sm:mt-5">
+            {/* WhatsApp */}
+            <Link href="#" className="hover:opacity-80 transition-opacity">
+              <Image
+                src={whatsappIcon}
+                alt="WhatsApp"
+                width={28}
+                height={28}
+                className="w-6 h-6 sm:w-7 sm:h-7"
               />
-              <Button
-                disabled={isLoading}
-                className="bg-gradient-to-r from-[#09BC8A] to-[#0C1B33] text-white px-6 py-2 rounded-full text-sm"
-              >
-                {isLoading ? (
-                  "..."
-                ) : (
-                  <>
-                    Assinar <FaArrowRightToBracket className="ml-2" />
-                  </>
-                )}
-              </Button>
-            </div>
+            </Link>
+            
+            {/* Instagram */}
+            <Link href="#" className="hover:opacity-80 transition-opacity">
+              <Image
+                src={instagramIcon}
+                alt="Instagram"
+                width={28}
+                height={28}
+                className="w-6 h-6 sm:w-7 sm:h-7"
+              />
+            </Link>
+            
+            {/* Facebook */}
+            <Link href="#" className="hover:opacity-80 transition-opacity">
+              <Image
+                src={facebookIcon}
+                alt="Facebook"
+                width={28}
+                height={28}
+                className="w-6 h-6 sm:w-7 sm:h-7"
+              />
+            </Link>
           </div>
         </div>
 
-        {/* TELAS PEQUENAS */}
-        <div className="flex flex-col gap-10 md:hidden">
-          {/* LOGO */}
-          <div className="flex justify-center">
-            <Image 
-              src="/img/logo.png" 
-              alt="Logo" 
-              width={128} 
-              height={128}
-              className="w-32 mb-4" 
+        <div>
+          <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
+            Links Rápidos
+          </h3>
+          <ul className="space-y-3">
+            {[
+              "Eventos",
+              "Criar Evento",
+              "Universidades Parceiras",
+              "Termos de Uso",
+            ].map((link) => (
+              <li key={link}>
+                <Link
+                  href="#"
+                  className="text-sm sm:text-base text-gray-400 hover:text-white transition-colors"
+                >
+                  {link}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
+            Newsletter
+          </h3>
+          <p className="text-sm sm:text-base text-gray-400 mb-4">
+            Receba as últimas atualizações no seu email
+          </p>
+          <div className="flex">
+            <input
+              type="email"
+              placeholder="Seu email"
+              className="px-4 py-3 sm:px-5 sm:py-3 rounded-l-lg text-gray-800 w-full text-sm sm:text-base"
             />
-          </div>
-
-          {/* LINKS EM DUAS COLUNAS */}
-          <div className="w-full flex justify-center">
-            <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm text-center">
-              <a href="#" className="hover:text-[#09BC8A]">
-                Política de troca
-              </a>
-              <a href="#" className="hover:text-[#09BC8A]">
-                Crie sua conta
-              </a>
-              <a href="#" className="hover:text-[#09BC8A]">
-                Perguntas frequentes
-              </a>
-              <a href="#" className="hover:text-[#09BC8A]">
-                Trabalhe conosco
-              </a>
-              <a href="#" className="hover:text-[#09BC8A]">
-                Política de privacidade
-              </a>
-              <a href="#" className="hover:text-[#09BC8A]">
-                Anuncie na Bikes.com.br
-              </a>
-            </div>
-          </div>
-
-          {/* ÍCONES SOCIAIS */}
-          <div className="flex justify-center gap-3">
-            <a
-              href="https://wa.me/"
-              target="_blank"
-              aria-label="WhatsApp"
-              rel="noreferrer">
-              <div className="bg-[#0C1B33] rounded-full">
-                <Image
-                  src="/img/whatsapp-footer.png"
-                  width={28}
-                  height={28}
-                  className="h-7 w-7"
-                  alt="WhatsApp"
-                />
-              </div>
-            </a>
-            <a
-              href="https://instagram.com/"
-              target="_blank"
-              aria-label="Instagram"
-              rel="noreferrer">
-              <div className="bg-[#0C1B33] rounded-full">
-                <Image
-                  src="/img/instagram-footer.png"
-                  width={28}
-                  height={28}
-                  className="h-7 w-7"
-                  alt="Instagram"
-                />
-              </div>
-            </a>
-            <a
-              href="https://facebook.com/"
-              target="_blank"
-              aria-label="Facebook"
-              rel="noreferrer">
-              <div className="bg-[#0C1B33] rounded-full">
-                <Image
-                  src="/img/facebook-footer.png"
-                  width={28}
-                  height={28}
-                  className="h-7 w-7"
-                  alt="Facebook"
-                />
-              </div>
-            </a>
-          </div>
-
-          {/* NEWSLETTER */}
-          <div className="text-center">
-            <label htmlFor="email" className="block text-sm font-medium mb-2 w-64 mx-auto">
-              Assine nossa Newsletter
-            </label>
-            <div className="flex flex-col items-center gap-3">
-              <Input
-                type="email"
-                id="email"
-                placeholder="E-mail"
-                className="w-64 border-2 border-[#09BC8A] rounded-md px-3 py-2 text-sm"
-                required
-              />
-              <Button
-                disabled={isLoading}
-                className="bg-gradient-to-r from-[#09BC8A] to-[#0C1B33] text-white py-2 rounded-full text-sm">
-                {isLoading ? (
-                  "..."
-                ) : (
-                  <>
-                    Assinar <FaArrowRightToBracket className="ml-2" />
-                  </>
-                )}
-              </Button>
-            </div>
+            <Button className="bg-purple-600 hover:bg-purple-700 rounded-l-none px-5 py-6 sm:px-6 text-sm sm:text-base">
+              Assinar
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* RODAPÉ INFERIOR */}
-      <div className="border-t mt-8 pt-4 text-xs flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-2 px-2">
-        <p>Bikes.com.br | Todos os direitos reservados</p>
-        <p>Produzido por: Agência Cariri</p>
+      <div className="border-t border-gray-800 mt-10 sm:mt-12 pt-6 text-center">
+        <p className="text-sm sm:text-base text-gray-400">
+          © 2023 UniEvents. Todos os direitos reservados.
+        </p>
       </div>
     </footer>
   );

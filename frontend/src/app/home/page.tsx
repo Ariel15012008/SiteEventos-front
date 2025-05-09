@@ -7,6 +7,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 
 export default function HomePage() {
   // Carousel control
@@ -326,83 +327,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-6 sm:py-8 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <div>
-            <h3 className="text-base sm:text-lg font-bold mb-1 sm:mb-2">
-              UniEvents
-            </h3>
-            <p className="text-xs text-gray-400">
-              Conectando você aos melhores eventos acadêmicos desde 2023.
-            </p>
-            <div className="flex gap-2 sm:gap-3 mt-2 sm:mt-3">
-              {["facebook", "instagram", "twitter"].map((social) => (
-                <Link
-                  key={social}
-                  href="#"
-                  className="hover:opacity-80 transition-opacity"
-                >
-                  <Image
-                    src={`/icons/${social}.svg`}
-                    alt={social}
-                    width={20}
-                    height={20}
-                    className="w-4 h-4 sm:w-5 sm:h-5"
-                  />
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-base sm:text-lg font-bold mb-1 sm:mb-2">
-              Links Rápidos
-            </h3>
-            <ul className="space-y-1">
-              {[
-                "Eventos",
-                "Criar Evento",
-                "Universidades Parceiras",
-                "Termos de Uso",
-              ].map((link) => (
-                <li key={link}>
-                  <Link
-                    href="#"
-                    className="text-xs text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-base sm:text-lg font-bold mb-1 sm:mb-2">
-              Newsletter
-            </h3>
-            <p className="text-xs text-gray-400 mb-2">
-              Receba as últimas atualizações no seu email
-            </p>
-            <div className="flex">
-              <input
-                type="email"
-                placeholder="Seu email"
-                className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-l-lg text-gray-800 w-full text-xs"
-              />
-              <Button className="bg-purple-600 hover:bg-purple-700 rounded-l-none px-2 py-1 sm:px-3 sm:py-1.5 text-xs">
-                Assinar
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-gray-800 mt-6 sm:mt-8 pt-4 text-center">
-          <p className="text-xs text-gray-400">
-            © 2023 UniEvents. Todos os direitos reservados.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

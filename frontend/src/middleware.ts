@@ -12,12 +12,7 @@ export function middleware(req: NextRequest) {
     const twoMinutes = 2 * 60 * 1000;
     const timeDiff = now - loggedTime;
 
-    console.log(
-      `[Middleware] Tempo desde login: ${Math.floor(timeDiff / 1000)}s`
-    );
-
     if (timeDiff > twoMinutes) {
-      console.log(`[Middleware] Sessão expirada - redirecionando para refresh`);
 
       const refreshUrl = new URL("/auth/refresh-token", req.url);
       refreshUrl.searchParams.set("next", pathname);
@@ -27,8 +22,6 @@ export function middleware(req: NextRequest) {
       response.cookies.delete("logged_user");
 
       return response;
-    } else {
-      console.log(`[Middleware] Sessão válida`);
     }
   }
 

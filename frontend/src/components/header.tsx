@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { BiLogOut } from "react-icons/bi";
 import { IoPersonCircle } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -22,34 +22,40 @@ export function Header() {
   const router = useRouter();
 
   useEffect(() => {
-    // Verificação de autenticação
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Simulando requisição para pegar dados do usuário
-      fetch("http://localhost:8000/users/me", {
-        method: "GET",
-        headers: {
-          'Authorization': `Bearer ${token}`
+    
+    fetch("http://localhost:8000/users/me", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then(async (res) => {
+        
+        if (!res.ok) {
+          console.error("Falha na autenticação");
+          throw new Error("Não autenticado");
         }
+        
+        const data = await res.json();
+        
+        setUser({ name: data.nome, email: data.email });
+        setIsAuthenticated(true);
+        
       })
-        .then(async (res) => {
-          if (!res.ok) throw new Error("Não autenticado");
-          const data = await res.json();
-          setUser({ name: data.name, email: data.email });
-          setIsAuthenticated(true);
-        })
-        .catch(() => {
-          setUser(null);
-          setIsAuthenticated(false);
-        });
-    }
+      .catch((error) => {
+        console.error("Erro na autenticação:");
+        setUser(null);
+        setIsAuthenticated(false);
+      });
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem('token');
+  const logout = async () => {
+    await fetch("http://localhost:8000/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+
     setIsAuthenticated(false);
     setUser(null);
-    router.push('/login');
+    router.push("/login");
   };
 
   return (
@@ -85,9 +91,9 @@ export function Header() {
                 <span className="font-medium">{user?.name || "Usuário"}</span>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end"   className="bg-[#3d0a62] shadow-xl rounded-md border-0 p-1 min-w-[200px]">
+            <DropdownMenuContent align="end" className="bg-[#ffffff] shadow-xl rounded-md border-0 p-1 min-w-[200px]">
               <DropdownMenuItem>
-                <Link href="/profile" className="flex items-center w-full">
+                <Link href="/user" className="flex items-center w-full">
                   <IoPersonCircle className="mr-2" />
                   Perfil
                 </Link>
@@ -108,12 +114,12 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button 
-            onClick={() => router.push('/login')}
-            className="bg-white text-purple-700 hover:bg-gray-100 font-medium"
+          <Link
+            href="/login"
+            className="text-lg font-medium hover:text-white/80 px-4 py-2 rounded-md hover:bg-white/10 transition-colors"
           >
             Entrar
-          </Button>
+          </Link>
         )}
       </div>
 
@@ -125,9 +131,11 @@ export function Header() {
           </Button>
         </SheetTrigger>
         <SheetContent side="right" className="bg-gradient-to-b from-purple-700 to-indigo-700 text-white w-64 border-l-0">
-          <div className="p-4 h-full flex flex-col">
-            <h2 className="text-xl font-semibold mb-6">Menu</h2>
-            
+          <SheetHeader className="border-b border-white/20 pb-4 mb-4">
+            <SheetTitle className="text-xl font-semibold">Menu</SheetTitle>
+          </SheetHeader>
+          
+          <div className="h-full flex flex-col">
             <nav className="space-y-4 flex-1">
               <Link
                 href="/events"
@@ -159,13 +167,6 @@ export function Header() {
                     <IoPersonCircle className="text-2xl" />
                     <span className="font-medium">{user?.name || "Usuário"}</span>
                   </div>
-                  <Link
-                    href="/profile"
-                    className="flex items-center space-x-3 text-lg py-2 hover:bg-white/10 rounded px-2 mb-2"
-                  >
-                    <IoPersonCircle />
-                    <span>Perfil</span>
-                  </Link>
                   <button
                     onClick={logout}
                     className="flex items-center space-x-3 text-lg py-2 hover:bg-white/10 rounded px-2 w-full text-red-300"
@@ -175,12 +176,12 @@ export function Header() {
                   </button>
                 </>
               ) : (
-                <Button 
-                  onClick={() => router.push('/login')}
-                  className="bg-white text-purple-700 hover:bg-gray-100 font-medium w-full"
+                <Link
+                  href="/login"
+                  className="flex items-center justify-center space-x-3 text-lg py-2 hover:bg-white/10 rounded px-2 w-full"
                 >
-                  Entrar
-                </Button>
+                  <span>Entrar</span>
+                </Link>
               )}
             </div>
           </div>
