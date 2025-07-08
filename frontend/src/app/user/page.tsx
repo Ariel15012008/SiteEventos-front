@@ -451,8 +451,8 @@ export default function ProfilePage() {
 
       toast.custom(
         (t) => (
-          <div className="">
-            <p className="font-medium text-gray-800">
+          <div className="bg-white p-4 rounded-lg shadow-lg border border-purple-200">
+            <p className="font-medium text-purple-800">
               Tem certeza que deseja excluir este endereço?
             </p>
             <div className="flex justify-end gap-2 mt-4">
@@ -461,7 +461,7 @@ export default function ProfilePage() {
                   deleteAddress(id);
                   toast.dismiss(t);
                 }}
-                className="bg-[#09bc8a] hover:bg-[#07a77a] text-white px-3 py-1 rounded-md text-sm font-medium">
+                className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md text-sm font-medium">
                 Confirmar
               </button>
               <button
@@ -482,19 +482,19 @@ export default function ProfilePage() {
 
   if (isFetching) {
     return (
-      <main className="mt-[80px] min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="w-8 h-8 border-4 border-[#09bc8a] border-t-transparent rounded-full animate-spin"></div>
+      <main className=" min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-700 via-pink-950 to-indigo-700">
+        <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
       </main>
     );
   }
 
   return (
-    <div className="font-sans">
+    <div className="font-sans bg-gradient-to-br from-purple-700 to-indigo-950 ">
       <Header />
-      <main className="mt-[80px] min-h-screen px-4 py-10 bg-gray-100 ">
-        <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+      <main className=" min-h-screen px-4 py-10">
+        <div className="max-w-3xl mx-auto bg-[#ffffff] rounded-lg shadow-lg p-6 mt-20">
           <div className="flex flex-col items-center justify-center gap-4 mb-8 md:mb-10">
-            <div className="w-24 h-24 md:w-32 md:h-32 relative rounded-full overflow-hidden shadow-md">
+            <div className="w-24 h-24 md:w-32 md:h-32 relative rounded-full overflow-hidden shadow-md border-2 border-purple-500">
               <Image
                 src="/img/perfil-placeholder.png"
                 alt="Foto de perfil"
@@ -503,63 +503,59 @@ export default function ProfilePage() {
                 priority
               />
             </div>
-            <p className="text-lg md:text-xl font-semibold">{formData.nome}</p>
+            <p className="text-lg md:text-xl font-semibold text-purple-800">{formData.nome}</p>
             <Button
               variant="outline"
-              className="text-sm md:text-base cursor-pointer">
+              className="text-sm md:text-base cursor-pointer text-purple-600 hover:bg-purple-50">
               Trocar foto
             </Button>
           </div>
 
           {!showLocationForm ? (
-            <form onSubmit={handleSubmit} className="space-y-6 ">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label>Nome completo</Label>
+                <Label className="text-black">Nome completo</Label>
                 <Input
                   name="nome"
                   value={formData.nome}
                   onChange={handleChange}
                   required
-                  className="cursor-pointer"
                 />
               </div>
               <div>
-                <Label>Email</Label>
+                <Label className="text-black">Email</Label>
                 <Input
                   name="email"
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="cursor-pointer"
                 />
               </div>
               <div>
-                <Label>Telefone</Label>
+                <Label className="text-black">Telefone</Label>
                 <Input
                   name="telefone"
                   value={formData.telefone}
                   onChange={handleChange}
                   maxLength={15}
                   required
-                  className="cursor-pointer"
                 />
               </div>
               <div>
-                <Label>Nova Senha</Label>
+                <Label className="text-black">Nova Senha</Label>
                 <div className="relative">
                   <Input
                     name="senha"
                     type={showPassword ? "text" : "password"}
                     value={formData.senha}
                     onChange={handleChange}
-                    className="pr-10 cursor-pointer"
                     placeholder="Deixe em branco para manter"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer">
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-500 cursor-pointer">
                     {showPassword ? <IoEyeOffSharp /> : <IoEyeSharp />}
                   </button>
                 </div>
@@ -568,14 +564,14 @@ export default function ProfilePage() {
               <Button
                 type="button"
                 onClick={() => setShowLocationForm(true)}
-                className="w-full cursor-pointer">
+                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700">
                 Adicionar informação de localização
               </Button>
 
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="h-12 w-full bg-gradient-to-r from-[#09bc8a] to-[#0c1b33] text-white cursor-pointer">
+                className="h-12 w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white hover:from-pink-700 hover:to-purple-700">
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
@@ -587,14 +583,14 @@ export default function ProfilePage() {
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <Label>País</Label>
+                  <Label className="text-purple-800">País</Label>
                   <Select
                     value={currentEndereco.id_pais}
                     onValueChange={(v) => handleEnderecoChange("id_pais", v)}>
-                    <SelectTrigger className="w-full cursor-pointer">
+                    <SelectTrigger className="w-full ">
                       <SelectValue placeholder="País" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       {countries.map((p) => (
                         <SelectItem key={p.id} value={p.id.toString()}>
                           {p.nome}
@@ -604,14 +600,14 @@ export default function ProfilePage() {
                   </Select>
                 </div>
                 <div>
-                  <Label>Estado</Label>
+                  <Label className="text-purple-800">Estado</Label>
                   <Select
                     value={currentEndereco.id_estado}
                     onValueChange={(v) => handleEnderecoChange("id_estado", v)}>
-                    <SelectTrigger className="w-full cursor-pointer">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Estado" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       {states.map((e) => (
                         <SelectItem key={e.id} value={e.id.toString()}>
                           {e.nome}
@@ -621,14 +617,14 @@ export default function ProfilePage() {
                   </Select>
                 </div>
                 <div>
-                  <Label>Cidade</Label>
+                  <Label className="text-purple-800">Cidade</Label>
                   <Select
                     value={currentEndereco.id_cidade}
                     onValueChange={(v) => handleEnderecoChange("id_cidade", v)}>
-                    <SelectTrigger className="w-full cursor-pointer">
+                    <SelectTrigger className="w-full ">
                       <SelectValue placeholder="Cidade" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       {cities.map((c) => (
                         <SelectItem key={c.id} value={c.id.toString()}>
                           {c.nome}
@@ -641,62 +637,58 @@ export default function ProfilePage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label>CEP</Label>
+                  <Label className="text-purple-800">CEP</Label>
                   <Input
                     value={currentEndereco.cep}
                     onChange={handleCEPChange}
                     placeholder="00000-000"
                     maxLength={9}
-                    className="cursor-pointer"
                   />
                 </div>
                 <div>
-                  <Label>Bairro</Label>
+                  <Label className="text-purple-800">Bairro</Label>
                   <Input
                     value={currentEndereco.bairro}
                     onChange={(e) =>
                       handleEnderecoChange("bairro", e.target.value)
                     }
                     placeholder="Bairro"
-                    className="cursor-pointer"
                   />
                 </div>
                 <div>
-                  <Label>Logradouro</Label>
+                  <Label className="text-purple-800">Logradouro</Label>
                   <Input
                     value={currentEndereco.logradouro}
                     onChange={(e) =>
                       handleEnderecoChange("logradouro", e.target.value)
                     }
                     placeholder="Logradouro"
-                    className="cursor-pointer"
                   />
                 </div>
                 <div>
-                  <Label>Número</Label>
+                  <Label className="text-purple-800">Número</Label>
                   <Input
                     value={currentEndereco.numero}
                     onChange={(e) => handleNumericInput(e, "numero")}
                     placeholder="Número"
-                    className="cursor-pointer"
                   />
                 </div>
                 <div className="relative pb-10">
-                  <Label>Complemento</Label>
+                  <Label className="text-purple-800">Complemento</Label>
                   <Input
                     value={currentEndereco.complemento || ""}
                     onChange={(e) =>
                       handleEnderecoChange("complemento", e.target.value)
                     }
                     placeholder="Complemento (opcional)"
-                    className={`mt-1 cursor-pointer ${showArrow ? "mb-6" : ""}`}
+                    className={`mt-1 ${showArrow ? "mb-6" : ""}`}
                   />
                   {showArrow && (
                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 sm:left-[100%] sm:translate-x-0">
                       <button
                         onClick={scrollToLocations}
                         className="animate-bounce cursor-pointer">
-                        <FaArrowDown className="text-[#0f9972] text-3xl" />
+                        <FaArrowDown className="text-purple-600 text-3xl" />
                       </button>
                     </div>
                   )}
@@ -711,11 +703,11 @@ export default function ProfilePage() {
                         checked as boolean
                       )
                     }
-                    className="cursor-pointer"
+                    className="border-purple-300 data-[state=checked]:bg-purple-600"
                   />
                   <label
                     htmlFor="endereco-primario"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-purple-800">
                     Definir como endereço principal
                   </label>
                 </div>
@@ -724,10 +716,10 @@ export default function ProfilePage() {
               <div className="flex flex-col gap-4 mt-6">
                 <Button
                   onClick={addEndereco}
-                  className="w-full cursor-pointer"
+                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700"
                   disabled={isSavingLocation}>
                   {isSavingLocation ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin cursor-pointer" />
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
                     "Adicionar localização"
                   )}
@@ -749,14 +741,14 @@ export default function ProfilePage() {
                     setShowLocationForm(false);
                     setShowArrow(false);
                   }}
-                  className="w-full cursor-pointer">
+                  className="w-full border-purple-500 text-purple-600 hover:bg-purple-50">
                   Voltar
                 </Button>
               </div>
 
               {enderecos.length > 0 && (
                 <div id="saved-locations" className="pt-8 space-y-4">
-                  <h3 className="text-lg font-semibold">
+                  <h3 className="text-lg font-semibold text-purple-800">
                     Endereços cadastrados
                   </h3>
                   {enderecos.map((e, i) => (
@@ -764,11 +756,11 @@ export default function ProfilePage() {
                       key={e.id}
                       className={`p-4 border rounded-md space-y-1 text-sm ${
                         e.endereco_primario
-                          ? "border-[#09bc8a] bg-[#09bc8a]/10"
+                          ? "border-purple-500 bg-purple-50"
                           : "border-gray-200 bg-gray-50"
                       }`}>
                       <div className="flex justify-between items-start">
-                        <p className="font-semibold">
+                        <p className="font-semibold text-purple-800">
                           {i + 1} -{" "}
                           {e.endereco_primario
                             ? "Endereço principal"
@@ -779,40 +771,40 @@ export default function ProfilePage() {
                             variant="outline"
                             size="sm"
                             onClick={() => router.push(`/editAddress/${e.id}`)}
-                            className="cursor-pointer">
+                            className="border-purple-500 text-purple-600 hover:bg-purple-50">
                             <FaRegEdit className="size-4" />
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => confirmDelete(e.id)}
-                            className="cursor-pointer text-red-500 hover:text-red-700">
+                            className="border-red-500 text-red-600 hover:bg-red-50">
                             <FaTrash className="size-4" />
                           </Button>
                         </div>
                       </div>
                       <p>
-                        <strong>Estado:</strong> {e.nome_estado}
+                        <strong className="text-purple-700">Estado:</strong> {e.nome_estado}
                       </p>
                       <p>
-                        <strong>Cidade:</strong> {e.nome_cidade}
+                        <strong className="text-purple-700">Cidade:</strong> {e.nome_cidade}
                       </p>
                       <p>
-                        <strong>Logradouro:</strong> {e.logradouro}
+                        <strong className="text-purple-700">Logradouro:</strong> {e.logradouro}
                       </p>
                       <p>
-                        <strong>Número:</strong> {e.numero}
+                        <strong className="text-purple-700">Número:</strong> {e.numero}
                       </p>
                       {e.complemento && (
-                        <p className="text-[#0f9972] font-medium">
+                        <p className="text-purple-600 font-medium">
                           <strong>Complemento:</strong> {e.complemento}
                         </p>
                       )}
                       <p>
-                        <strong>Bairro:</strong> {e.bairro}
+                        <strong className="text-purple-700">Bairro:</strong> {e.bairro}
                       </p>
                       <p>
-                        <strong>CEP:</strong> {e.cep}
+                        <strong className="text-purple-700">CEP:</strong> {e.cep}
                       </p>
                     </div>
                   ))}
@@ -830,42 +822,42 @@ export default function ProfilePage() {
           unstyled: true,
           classNames: {
             toast: `
-        bg-white !important
-        border border-gray-200
-        flex items-center 
-        p-4 rounded-md 
-        shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)]
-        gap-4 
-        max-w-[320px] w-full
-        text-gray-800
-      `,
-            title: "font-bold text-sm",
-            description: "text-sm",
+              bg-white
+              border border-purple-200
+              flex items-center 
+              p-4 rounded-md 
+              shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)]
+              gap-4 
+              max-w-[320px] w-full
+              text-gray-800
+            `,
+            title: "font-bold text-sm text-purple-800",
+            description: "text-sm text-purple-700",
             error: `
-        !bg-red-100 !important
-        !border-red-300
-        !text-red-800
-      `,
+              !bg-red-100
+              !border-red-300
+              !text-red-800
+            `,
             success: `
-        !bg-green-100 !important
-        !border-green-300
-        !text-green-800
-      `,
+              !bg-green-100
+              !border-green-300
+              !text-green-800
+            `,
             actionButton: `
-        bg-[#09bc8a] hover:bg-[#07a77a]
-        text-white 
-        px-3 py-1 
-        rounded-md 
-        text-sm font-medium
-      `,
+              bg-purple-600 hover:bg-purple-700
+              text-white 
+              px-3 py-1 
+              rounded-md 
+              text-sm font-medium
+            `,
             cancelButton: `
-        bg-gray-200 hover:bg-gray-300
-        text-gray-800 
-        px-3 py-1 
-        rounded-md 
-        text-sm font-medium 
-        ml-2
-      `,
+              bg-gray-200 hover:bg-gray-300
+              text-gray-800 
+              px-3 py-1 
+              rounded-md 
+              text-sm font-medium 
+              ml-2
+            `,
           },
         }}
       />
